@@ -289,12 +289,20 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
   // live player count (works once the site is on your own domain)
   const st=document.getElementById('status'),stt=document.getElementById('statusText');
+  const API_HOST='GK38AKJJR3ALFI392OG.exaroton.me';
+  const show=(on,n,m)=>{
+    if(on){st.className='status on';stt.textContent=n==null?'Server online':`Server online · ${n} / ${m??'?'} players`}
+    else{st.className='status off';stt.textContent='Server offline'}
+  };
   const check=async()=>{
+    // try mcstatus.io first, fall back to mcsrvstat.us
     try{
-      const res=await fetch('https://api.mcsrvstat.us/3/'+IP);
-      const d=await res.json();
-      if(d.online){st.className='status on';stt.textContent=`${d.players?.online??0} / ${d.players?.max??'?'} players online`}
-      else{st.className='status off';stt.textContent='Server offline'}
+      const d=await (await fetch('https://api.mcstatus.io/v2/status/java/'+API_HOST)).json();
+      if(d.online){show(true,d.players?.online,d.players?.max);return}
+    }catch(e){}
+    try{
+      const d=await (await fetch('https://api.mcsrvstat.us/3/'+API_HOST)).json();
+      show(!!d.online,d.players?.online,d.players?.max);
     }catch(e){st.className='status';stt.textContent='Player count unavailable'}
   };
   check();setInterval(check,60000);
