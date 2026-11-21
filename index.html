@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remi SMP</title>
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: mysterious, adventurous, a little epic — a server you want to join tonight
+   IDEA: a floating isle at night, ringed by glowing essence shells, like the Season 2 event arena
+   PICTURE: big SVG isle over a dark sea with a rainbow ring of 16 shells orbiting it
+   COLOUR and TYPE: the RS logo's cyan #45e0e0 and white on deep teal night #04232a; Pixelify Sans titles + Rubik body
+   LAYOUT: sticky nav, hero (title + IP + live player count left, isle right), features, recipes, how to join, rules, Discord band, footer */
+:root{color-scheme:dark;--bg:#04232a;--bg2:#062e36;--panel:#0a3b45;--ink:#f2fefe;--mute:#9fd3d4;--teal:#45e0e0;--light:#bbf9f9;--line:#135562}
+:root[data-theme=light],:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Rubik,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--teal)}
+h1,h2,h3{font-family:"Pixelify Sans",Rubik,sans-serif;line-height:1.05;text-wrap:balance;margin:0}
+h2{font-size:clamp(30px,4vw,44px);margin-bottom:12px}
+h3{font-size:22px;margin-bottom:6px}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding:clamp(40px,6vw,88px) max(5vw,16px)}
+.lede{color:var(--mute);max-width:62ch;margin:0 0 32px;font-size:17px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:5;background:rgba(4,35,42,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:10px max(5vw,16px)}
+.logo{font-family:"Pixelify Sans";font-weight:700;font-size:24px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo img{width:36px;height:36px;border-radius:9px;box-shadow:0 0 14px #45e0e066}
+.links{display:flex;gap:4px 18px;flex-wrap:wrap;margin-left:auto}
+.links a{color:var(--mute);text-decoration:none;padding:10px 2px;font-weight:500}
+.links a:hover,.links a:focus-visible{color:var(--ink)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:12px;font:600 16px Rubik,sans-serif;text-decoration:none;border:0;cursor:pointer}
+.btn.main{background:var(--teal);color:#032227}
+.btn.main:hover{background:var(--light)}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn.ghost:hover{border-color:var(--teal)}
+.btn:focus-visible,.ip:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+/* hero */
+.hero{background:radial-gradient(120% 80% at 75% 30%,#0c4a55 0%,var(--bg) 60%);border-bottom:1px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:40px;align-items:center}
+.tag{display:inline-block;background:#45e0e022;color:var(--light);border:1px solid #45e0e066;border-radius:999px;padding:4px 14px;font-size:14px;font-weight:600;margin-bottom:18px}
+.hero h1{font-size:clamp(56px,9vw,104px);margin-bottom:16px;text-shadow:0 6px 24px #45e0e040}
+.hero p{font-size:18px;color:var(--mute);max-width:46ch;margin:0 0 26px}
+.ipbox{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.ip{display:flex;align-items:center;gap:12px;min-height:52px;padding:0 18px;background:var(--panel);border:2px dashed var(--teal);border-radius:12px;color:var(--ink);font:600 18px "Pixelify Sans",monospace;cursor:pointer}
+.ip small{font:500 13px Rubik,sans-serif;color:var(--mute)}
+.meta{display:flex;gap:10px 18px;flex-wrap:wrap;align-items:center;color:var(--mute);font-size:14px}
+.meta b{color:var(--ink)}
+.status{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);color:var(--ink);font-weight:600}
+.status i{width:10px;height:10px;border-radius:50%;background:#7a9a9c}
+.status.on i{background:#4dff88;box-shadow:0 0 10px #4dff88}
+.status.off i{background:#ff5d5d}
+.fig{position:relative;aspect-ratio:1/0.9}
+.fig svg{position:absolute;inset:0;width:100%;height:100%}
+.ring{transform-origin:300px 250px;animation:spin 40s linear infinite}
+.bob{animation:bob 6s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bob{50%{transform:translateY(-10px)}}
+
+/* features */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px}
+.card p{margin:0;color:var(--mute)}
+.card .ico{width:44px;height:44px;margin-bottom:14px}
+
+/* recipes */
+.alt{background:var(--bg2)}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:22px}
+.recipe{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+.recipe img{display:block;width:100%;height:auto;border-radius:8px}
+.recipe figcaption{padding:12px 6px 4px;color:var(--mute)}
+.recipe figcaption b{color:var(--ink);font-family:"Pixelify Sans";font-size:19px;font-weight:700;display:block}
+
+/* join */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:18px;counter-reset:s}
+.step{position:relative;padding:24px 24px 24px 76px;background:var(--panel);border-radius:16px;border:1px solid var(--line)}
+.step::before{counter-increment:s;content:counter(s);position:absolute;left:22px;top:22px;width:38px;height:38px;border-radius:10px;background:var(--teal);color:#032227;font:700 20px "Pixelify Sans";display:grid;place-items:center}
+.step p{margin:0;color:var(--mute)}
+
+/* rules */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:10px 40px;padding:0;margin:0;list-style:none}
+.rules li{padding:14px 0;border-bottom:1px solid var(--line);display:flex;gap:14px}
+.rules li span{color:var(--teal);font-family:"Pixelify Sans";font-weight:700;flex:none}
+
+/* discord */
+.cta{background:repeating-linear-gradient(120deg,#45e0e0 0 22px,#7cecec 22px 34px);text-align:center;color:#fff}
+.cta h2{font-size:clamp(34px,5vw,56px);text-shadow:0 4px 0 #1c9a9a,0 8px 22px #0005}
+.cta .lede{margin:0 auto 28px;color:#063b40;font-weight:600}
+.cta .btn{background:#fff;color:#0b5560}
+.cta .btn:hover{background:#04232a;color:#fff}
+footer{padding:28px max(5vw,16px);color:var(--mute);font-size:14px;border-top:1px solid var(--line)}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140px);opacity:0;background:var(--teal);color:#032227;font-weight:600;padding:12px 20px;border-radius:12px;transition:transform .25s,opacity .25s}
+.toast.on{transform:translate(-50%,0);opacity:1}
+
+@media(max-width:800px){
+  .hero .wrap{grid-template-columns:minmax(0,1fr)}
+  .fig{order:-1;max-width:520px;width:100%;margin:0 auto}
+}
+@media(max-width:600px){.links{margin-left:0;width:100%}.ip{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.ring,.bob{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#top"><img src="logo.webp" alt="" width="36" height="36">Remi SMP</a>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#recipes">Recipes</a>
+      <a href="#join">How to join</a>
+      <a href="#rules">Rules</a>
+      <a href="#discord">Discord</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero band" id="top">
+  <div class="wrap">
+    <div>
+      <span class="tag">Season 2 — Essence SMP</span>
+      <h1>Remi SMP</h1>
+      <p>Claim one of 16 essences, guard your sparks and team up or fight for the server's rarest gear.</p>
+      <div class="ipbox">
+        <button class="ip" id="ipBtn" aria-label="Copy server address">
+          <span>play.remismp.online</span><small>Click to copy</small>
+        </button>
+        <a class="btn ghost" href="https://discord.gg/yQ2aAjVGts">Join the Discord</a>
+      </div>
+      <div class="meta">
+        <span class="status" id="status"><i></i><span id="statusText">Checking server...</span></span>
+        <span>Java Edition <b>26.1.2</b></span><span><b>Open</b> to everyone</span>
+      </div>
+    </div>
+
+    <div class="fig" aria-hidden="true">
+      <svg viewBox="0 0 600 540">
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#45e0e0" stop-opacity=".35"/>
+            <stop offset="1" stop-color="#45e0e0" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#4fd17a"/><stop offset="1" stop-color="#2a8f55"/>
+          </linearGradient>
+          <linearGradient id="rock" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#5b4a3d"/><stop offset="1" stop-color="#1c1a1f"/>
+          </linearGradient>
+          <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0d4652"/><stop offset="1" stop-color="#04232a"/>
+          </linearGradient>
+          <g id="shell">
+            <circle r="13" fill="currentColor" opacity=".25"/>
+            <path d="M0-9a9 9 0 1 1-9 9a6 6 0 0 1 6-6a3.5 3.5 0 0 1 3.5 3.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+            <circle r="3" fill="#fff"/>
+          </g>
+        </defs>
+        <g fill="#f2fefe" opacity=".7">
+          <circle cx="60" cy="50" r="1.6"/><circle cx="140" cy="110" r="1.2"/><circle cx="520" cy="60" r="1.8"/>
+          <circle cx="470" cy="140" r="1.1"/><circle cx="90" cy="230" r="1.3"/><circle cx="560" cy="250" r="1.2"/>
+          <circle cx="300" cy="30" r="1.4"/><circle cx="220" cy="70" r="1"/><circle cx="400" cy="90" r="1.2"/>
+        </g>
+        <circle cx="490" cy="90" r="34" fill="#f2fefe"/><circle cx="476" cy="82" r="30" fill="#0a3a44"/>
+        <rect x="0" y="420" width="600" height="120" fill="url(#sea)"/>
+        <ellipse cx="300" cy="440" rx="190" ry="14" fill="#45e0e0" opacity=".14"/>
+        <circle cx="300" cy="250" r="230" fill="url(#glow)"/>
+        <g class="bob">
+          <path d="M180 260 L420 260 L390 300 L360 360 L320 410 L300 440 L280 405 L240 360 L210 300 Z" fill="url(#rock)"/>
+          <path d="M300 440 L320 410 L360 360 L390 300 L420 260 L400 260 L370 300 L340 360 L300 420Z" fill="#000" opacity=".25"/>
+          <path d="M170 250 Q300 225 430 250 L420 268 Q300 250 180 268 Z" fill="url(#grass)"/>
+          <path d="M175 252 Q300 230 425 252" stroke="#8ef0a8" stroke-width="2" fill="none" opacity=".7"/>
+          <rect x="236" y="200" width="10" height="46" fill="#5b3a24"/>
+          <rect x="212" y="160" width="58" height="48" rx="6" fill="#2f9a5c"/>
+          <rect x="222" y="140" width="38" height="30" rx="6" fill="#3fb86f"/>
+          <rect x="320" y="206" width="60" height="40" fill="#6f7d86"/>
+          <rect x="314" y="198" width="72" height="12" fill="#a3b1b8"/>
+          <rect x="330" y="216" width="40" height="30" fill="#2b3a42"/>
+          <circle cx="350" cy="176" r="16" fill="#45e0e0" opacity=".3"/>
+          <g transform="translate(350 176)" color="#bbf9f9"><use href="#shell"/></g>
+        </g>
+        <g class="ring" id="ring"></g>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<section class="band" id="features">
+  <div class="wrap">
+    <h2>What makes Remi different</h2>
+    <p class="lede">Season 2 is a full reset with a brand new plugin. Every player's power comes from their essence, and every life counts.</p>
+    <div class="grid" id="feat"></div>
+  </div>
+</section>
+
+<section class="band alt" id="recipes">
+  <div class="wrap">
+    <h2>Recipes</h2>
+    <p class="lede">Craft these at any crafting table.</p>
+    <div class="rgrid">
+      <figure class="recipe"><img src="r_upgrader.png" alt="Essence Upgrader recipe: diamond blocks in the corners, gold blocks on the sides, Heart of the Sea in the middle" width="564" height="284" loading="lazy"><figcaption><b>Essence Upgrader</b>Takes your essence to Tier 2 and unlocks moves 3 and 4.</figcaption></figure>
+      <figure class="recipe"><img src="r_token.png" alt="Essence Token recipe: emerald blocks in the corners, diamonds on the sides, echo shard in the middle" width="562" height="284" loading="lazy"><figcaption><b>Essence Token</b>Rerolls your essence and keeps your sparks.</figcaption></figure>
+      <figure class="recipe"><img src="r_rejuvenator.png" alt="Essence Rejuvenator recipe: netherite ingots in the corners, diamond blocks on the sides, nether star in the middle" width="564" height="284" loading="lazy"><figcaption><b>Essence Rejuvenator</b>Restores your sparks to 5.</figcaption></figure>
+      <figure class="recipe"><img src="r_revival.png" alt="Revival Book recipe: gold blocks in the corners, totem on top, diamond blocks on the sides, book in the middle, nether star on the bottom" width="562" height="284" loading="lazy"><figcaption><b>Revival Book</b>Brings a player back.</figcaption></figure>
+      <figure class="recipe"><img src="r_cobweb.png" alt="Cobweb recipe: 1 string in any slot makes 1 cobweb" width="564" height="214" loading="lazy"><figcaption><b>Cobweb</b>1 string in any slot.</figcaption></figure>
+      <figure class="recipe"><img src="r_gapple.png" alt="Golden Apple recipe, shapeless: 4 gold ingots and 1 apple" width="562" height="214" loading="lazy"><figcaption><b>Golden Apple</b>4 gold ingots and 1 apple, shapeless.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="join">
+  <div class="wrap">
+    <h2>How to join</h2>
+    <p class="lede">No whitelist. Anyone can hop on.</p>
+    <div class="steps">
+      <div class="step"><h3>Open Minecraft</h3><p>Launch Java Edition on version 26.1.2.</p></div>
+      <div class="step"><h3>Add the server</h3><p>Go to Multiplayer, then Add Server.</p></div>
+      <div class="step"><h3>Connect</h3><p>Enter <b>play.remismp.online</b> and join.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="rules">
+  <div class="wrap">
+    <h2>Rules</h2>
+    <p class="lede">Break them and you lose more than sparks.</p>
+    <ul class="rules" id="rulesList"></ul>
+  </div>
+</section>
+
+<section class="band cta" id="discord">
+  <div class="wrap">
+    <h2>Ready to claim your essence?</h2>
+    <p class="lede">Season news, events and updates all happen on Discord.</p>
+    <a class="btn main" href="https://discord.gg/yQ2aAjVGts">Join the Discord</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Remi SMP. Not affiliated with Mojang or Microsoft.</span>
+    <span>Run by kcyq</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status">Copied!</div>
+
+<script>
+{
+  const IP='play.remismp.online';
+  const colors=['#ff5d5d','#ff8f4d','#ffcc4d','#d6ff4d','#5dff9b','#4dffd6','#4dc7ff','#4d8bff','#8b6bff','#b98bff','#e07aff','#ff7ad9','#ff4d8b','#ffffff','#45e0e0','#bbf9f9'];
+  document.getElementById('ring').innerHTML=colors.map((c,i)=>{
+    const a=i/colors.length*Math.PI*2, x=300+Math.cos(a)*215, y=250+Math.sin(a)*70;
+    return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})" color="${c}"><use href="#shell"/></g>`;
+  }).join('');
+
+  const feats=[
+    ['16 essences','Each essence has its own abilities. Upgrade to Tier 2 to unlock moves 3 and 4.','#b98bff'],
+    ['Sparks','Everyone starts with 5 sparks (max 7). Hit 0 and you are banned for 30 minutes.','#ffcc4d'],
+    ['Mythic essences','Two new mythics can drop from the Wither and the Warden. Fight for them.','#ff5d5d'],
+    ['Limited gear','Only 3 netherite sets, 3 netherite swords and 3 maces exist on the whole server.','#4dc7ff'],
+    ['Dragon rewards','The Ender Dragon drops a glowing netherite set. Hold the Dragon Egg for 5 extra hearts.','#5dff9b'],
+    ['Guilds','Team up in guilds of up to 3 players, or go solo and take everyone on.','#45e0e0']
+  ];
+  document.getElementById('feat').innerHTML=feats.map(([t,d,c])=>`
+    <div class="card">
+      <svg class="ico" viewBox="-22 -22 44 44" color="${c}"><use href="#shell"/></svg>
+      <h3>${t}</h3><p>${d}</p>
+    </div>`).join('');
+
+  const rules=[
+    'No hacked clients, x-ray or unfair mods.',
+    'Logging out in combat (20 seconds) kills you.',
+    'No duping or abusing bugs. Report them to kcyq.',
+    'Respect other players in chat. No hate or harassment.',
+    'Maces have a 30 second cooldown. Don\'t try to bypass it.',
+    'Stolen items are tracked, so stealing has consequences.'
+  ];
+  document.getElementById('rulesList').innerHTML=rules.map((r,i)=>`<li><span>${i+1}.</span>${r}</li>`).join('');
+
+  // live player count (works once the site is on your own domain)
+  const st=document.getElementById('status'),stt=document.getElementById('statusText');
+  const check=async()=>{
+    try{
+      const res=await fetch('https://api.mcsrvstat.us/3/'+IP);
+      const d=await res.json();
+      if(d.online){st.className='status on';stt.textContent=`${d.players?.online??0} / ${d.players?.max??'?'} players online`}
+      else{st.className='status off';stt.textContent='Server offline'}
+    }catch(e){st.className='status';stt.textContent='Player count unavailable'}
+  };
+  check();setInterval(check,60000);
+
+  const toast=document.getElementById('toast');
+  document.getElementById('ipBtn').addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(IP);toast.textContent='Copied '+IP}
+    catch(e){toast.textContent='Server: '+IP}
+    toast.classList.add('on');setTimeout(()=>toast.classList.remove('on'),1800);
+  });
+}
+</script>
+</body>
+</html>
