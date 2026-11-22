@@ -102,6 +102,8 @@ nav .wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:10px m
 .gate form:hover,.gate form:focus-within{opacity:1}
 .gate label{font:500 13px "Pixelify Sans",monospace;color:var(--mute)}
 .gate input{width:150px;min-height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:#031b20;color:var(--ink);font:16px Rubik,sans-serif}
+.gate button{min-height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--teal);background:transparent;color:var(--teal);font:600 14px Rubik,sans-serif;cursor:pointer}
+.gate button:hover{background:var(--teal);color:#032227}
 .gate input:focus{outline:2px solid var(--teal);outline-offset:1px}
 .gate.no input{animation:nope .35s}
 @keyframes nope{25%,75%{transform:translateX(-6px)}50%{transform:translateX(6px)}}
@@ -259,6 +261,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   <form id="gateForm" autocomplete="off">
     <label for="gateIn">What was the beginning of all essences?</label>
     <input id="gateIn" type="text" spellcheck="false">
+    <button id="gateBtn" type="submit">Check</button>
   </form>
 </div>
 
@@ -333,13 +336,15 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   };
   // the beginning
   const gate=document.getElementById('gate'),gIn=document.getElementById('gateIn');
-  document.getElementById('gateForm').addEventListener('submit',e=>{
-    e.preventDefault();
+  const tryGate=e=>{
+    if(e)e.preventDefault();
     const w=gIn.value.trim().toLowerCase().replace(/^the\s+/,'').replace(/\s+essence$/,'');
     const h=sha256(w);
     if(h==='181fdd46fc4a7246b9f4f1eba3129ba5d724011af5f10223b3589955d1df108a'){location.href=w+'.html';return}
     gate.classList.remove('no');void gate.offsetWidth;gate.classList.add('no');gIn.value='';
-  });
+  };
+  document.getElementById('gateForm').addEventListener('submit',tryGate);
+  gIn.addEventListener('keydown',e=>{if(e.key==='Enter')tryGate(e)});
 }
 </script>
 </body>
