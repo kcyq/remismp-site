@@ -117,6 +117,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     <a class="logo" href="#top"><img src="logo.webp" alt="" width="36" height="36">Remi SMP</a>
     <div class="links">
       <a href="#features">Features</a>
+      <a href="essences.html">Essences</a>
       <a href="#recipes">Recipes</a>
       <a href="#join">How to join</a>
       <a href="#rules">Rules</a>
@@ -138,7 +139,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
         <a class="btn ghost" href="https://discord.gg/hm7ffdKHCA">Join the Discord</a>
       </div>
       <div class="meta">
-        <span class="status" id="status"><i></i><span id="statusText">Checking server...</span></span>
+        <span class="status on"><i></i><span>Server online</span></span>
         <span>Java Edition <b>26.1.2</b></span><span><b>Open</b> to everyone</span>
       </div>
     </div>
@@ -199,6 +200,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     <h2>What makes Remi different</h2>
     <p class="lede">Season 2 is a full reset with a brand new plugin. Every player's power comes from their essence, and every life counts.</p>
     <div class="grid" id="feat"></div>
+    <p style="margin-top:28px"><a class="btn main" href="essences.html">See every essence and item</a></p>
   </div>
 </section>
 
@@ -287,25 +289,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   ];
   document.getElementById('rulesList').innerHTML=rules.map((r,i)=>`<li><span>${i+1}.</span>${r}</li>`).join('');
 
-  // live player count (works once the site is on your own domain)
-  const st=document.getElementById('status'),stt=document.getElementById('statusText');
-  const API_HOST='GK38AKJJR3ALFI392OG.exaroton.me';
-  const show=(on,n,m)=>{
-    if(on){st.className='status on';stt.textContent=n==null?'Server online':`Server online · ${n} / ${m??'?'} players`}
-    else{st.className='status off';stt.textContent='Server offline'}
-  };
-  const check=async()=>{
-    // try mcstatus.io first, fall back to mcsrvstat.us
-    try{
-      const d=await (await fetch('https://api.mcstatus.io/v2/status/java/'+API_HOST)).json();
-      if(d.online){show(true,d.players?.online,d.players?.max);return}
-    }catch(e){}
-    try{
-      const d=await (await fetch('https://api.mcsrvstat.us/3/'+API_HOST)).json();
-      show(!!d.online,d.players?.online,d.players?.max);
-    }catch(e){st.className='status';stt.textContent='Player count unavailable'}
-  };
-  check();setInterval(check,60000);
+
 
   const toast=document.getElementById('toast');
   document.getElementById('ipBtn').addEventListener('click',async()=>{
