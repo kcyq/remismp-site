@@ -97,6 +97,14 @@ nav .wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:10px m
 .cta .lede{margin:0 auto 28px;color:#063b40;font-weight:600}
 .cta .btn{background:#fff;color:#0b5560}
 .cta .btn:hover{background:#04232a;color:#fff}
+.gate{display:flex;justify-content:center;padding:26px 16px 6px;background:var(--bg)}
+.gate form{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;opacity:.22;transition:opacity .4s}
+.gate form:hover,.gate form:focus-within{opacity:1}
+.gate label{font:500 13px "Pixelify Sans",monospace;color:var(--mute)}
+.gate input{width:150px;min-height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:#031b20;color:var(--ink);font:16px Rubik,sans-serif}
+.gate input:focus{outline:2px solid var(--teal);outline-offset:1px}
+.gate.no input{animation:nope .35s}
+@keyframes nope{25%,75%{transform:translateX(-6px)}50%{transform:translateX(6px)}}
 footer{padding:28px max(5vw,16px);color:var(--mute);font-size:14px;border-top:1px solid var(--line)}
 footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140px);opacity:0;background:var(--teal);color:#032227;font-weight:600;padding:12px 20px;border-radius:12px;transition:transform .25s,opacity .25s}
@@ -247,6 +255,13 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   </div>
 </section>
 
+<div class="gate" id="gate">
+  <form id="gateForm" autocomplete="off">
+    <label for="gateIn">What was the beginning of all essences?</label>
+    <input id="gateIn" type="text" spellcheck="false">
+  </form>
+</div>
+
 <footer>
   <div class="wrap">
     <span>© 2026 Remi SMP. Not affiliated with Mojang or Microsoft.</span>
@@ -296,6 +311,15 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     try{await navigator.clipboard.writeText(IP);toast.textContent='Copied '+IP}
     catch(e){toast.textContent='Server: '+IP}
     toast.classList.add('on');setTimeout(()=>toast.classList.remove('on'),1800);
+  });
+  // the beginning
+  const gate=document.getElementById('gate'),gIn=document.getElementById('gateIn');
+  document.getElementById('gateForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const w=gIn.value.trim().toLowerCase().replace(/^the\s+/,'').replace(/\s+essence$/,'');
+    const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(w)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(h==='181fdd46fc4a7246b9f4f1eba3129ba5d724011af5f10223b3589955d1df108a'){location.href=w+'.html';return}
+    gate.classList.remove('no');void gate.offsetWidth;gate.classList.add('no');gIn.value='';
   });
 }
 </script>
