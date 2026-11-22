@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Singleplayer Mod | Remi SMP</title>
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: friendly, clear, a little exciting — "take Remi home with you"
+   IDEA: a download page that reads like a quest: grab the mod, follow the steps, wake your essence
+   PICTURE: a big download card with the mod's jar as a glowing essence orb, then the install steps as a numbered path
+   COLOUR and TYPE: same cyan/teal night as the rest of the site; Pixelify Sans + Rubik
+   LAYOUT: nav, hero + download card, what you need, install steps, what's in / what's server-only, FAQ, footer */
+:root{color-scheme:dark;--bg:#04232a;--bg2:#062e36;--panel:#0a3b45;--ink:#f2fefe;--mute:#9fd3d4;--teal:#45e0e0;--light:#bbf9f9;--line:#135562}
+:root[data-theme=light],:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Rubik,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--teal)}
+h1,h2,h3{font-family:"Pixelify Sans",Rubik,sans-serif;line-height:1.05;text-wrap:balance;margin:0}
+h1{font-size:clamp(44px,7vw,80px);margin-bottom:14px}
+h2{font-size:clamp(30px,4vw,44px);margin-bottom:12px}
+h3{font-size:21px;margin-bottom:6px}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding:clamp(40px,6vw,80px) max(5vw,16px)}
+.alt{background:var(--bg2)}
+.lede{color:var(--mute);max-width:62ch;margin:0 0 28px;font-size:17px}
+code{font:15px ui-monospace,Consolas,monospace;background:#04232a;border:1px solid var(--line);border-radius:6px;padding:1px 6px;overflow-wrap:anywhere}
+
+nav{position:sticky;top:0;z-index:5;background:rgba(4,35,42,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:10px max(5vw,16px)}
+.logo{font-family:"Pixelify Sans";font-weight:700;font-size:24px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo img{width:36px;height:36px;border-radius:9px;box-shadow:0 0 14px #45e0e066}
+.links{display:flex;gap:4px 18px;flex-wrap:wrap;margin-left:auto}
+.links a{color:var(--mute);text-decoration:none;padding:10px 2px;font-weight:500}
+.links a:hover,.links a[aria-current]{color:var(--ink)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 26px;border-radius:12px;font:600 17px Rubik,sans-serif;text-decoration:none;border:0;cursor:pointer}
+.btn.main{background:var(--teal);color:#032227}
+.btn.main:hover{background:var(--light)}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn.ghost:hover{border-color:var(--teal)}
+.btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.btn svg{width:20px;height:20px}
+
+.hero{background:radial-gradient(120% 90% at 80% 0%,#0c4a55 0%,var(--bg) 60%);border-bottom:1px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:center}
+.tag{display:inline-block;background:#45e0e022;color:var(--light);border:1px solid #45e0e066;border-radius:999px;padding:4px 14px;font-size:14px;font-weight:600;margin-bottom:18px}
+.dl{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:28px;text-align:center;box-shadow:0 30px 80px #0006}
+.jar{width:120px;height:120px;margin:0 auto 18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0 12%,#78ffc8 35%,#1a8a8a 70%,#0b3a3f 100%);box-shadow:0 0 50px #78ffc888,0 0 120px #45e0e044;animation:pulse 3.5s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 70px #78ffc8bb,0 0 160px #45e0e066}}
+.dl h2{font-size:30px;margin-bottom:4px}
+.dl .ver{color:var(--mute);margin:0 0 20px;font-size:15px}
+.dl .btn{width:100%}
+.specs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:20px 0 0;padding:0;list-style:none}
+.specs li{background:#04232a;border-radius:10px;padding:10px 6px;font-size:13px;color:var(--mute)}
+.specs b{display:block;color:var(--ink);font-size:15px}
+
+.need{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:8px}
+.card p{margin:0;color:var(--mute)}
+.card .btn{margin-top:auto;align-self:flex-start;min-height:44px;font-size:15px;padding:0 18px}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:14px;counter-reset:s;max-width:860px}
+.steps li{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px 20px 78px}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:22px;top:20px;width:38px;height:38px;border-radius:10px;background:var(--teal);color:#032227;font:700 20px "Pixelify Sans";display:grid;place-items:center}
+.steps p{margin:0;color:var(--mute)}
+.steps b{color:var(--ink);font-weight:600}
+
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:18px}
+.list{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
+.list ul{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.list li{display:flex;gap:12px;color:var(--mute)}
+.list li::before{flex:none;font-weight:700}
+.yes li::before{content:"✓";color:#4dff88}
+.no li::before{content:"✕";color:#ff7a8a}
+.list b{color:var(--ink);font-weight:600}
+
+.faq{max-width:860px;display:grid;gap:10px}
+details{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:0 20px}
+summary{cursor:pointer;font-weight:600;padding:16px 0;min-height:44px;list-style-position:outside}
+summary:focus-visible{outline:2px solid var(--teal);outline-offset:4px;border-radius:6px}
+details p{margin:0 0 16px;color:var(--mute)}
+
+footer{padding:28px max(5vw,16px);color:var(--mute);font-size:14px;border-top:1px solid var(--line)}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media(max-width:860px){.hero .wrap{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.links{margin-left:0;width:100%}.steps li{padding-left:68px}.steps li::before{left:16px}}
+@media(prefers-reduced-motion:reduce){.jar{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html"><img src="logo.webp" alt="" width="36" height="36">Remi SMP</a>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="essences.html">Essences</a>
+      <a href="singleplayer.html" aria-current="page">Singleplayer</a>
+      <a href="index.html#recipes">Recipes</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero band">
+  <div class="wrap">
+    <div>
+      <span class="tag">Essence Mod for Fabric</span>
+      <h1>Play Remi in singleplayer</h1>
+      <p class="lede">The Essence Mod brings the essences from Remi SMP into your own worlds. Same essences, same abilities, no server needed. Practice your combos, try every essence or just have fun on your own.</p>
+      <a class="btn ghost" href="#install">How to install</a>
+    </div>
+    <div class="dl">
+      <div class="jar" aria-hidden="true"></div>
+      <h2>Essence Mod</h2>
+      <p class="ver">Version 1.0.0 · 5.4 MB</p>
+      <a class="btn main" href="downloads/EssenceMod-1.0.0.jar" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M6 10l6 6 6-6M4 21h16"/></svg>
+        Download the mod
+      </a>
+      <ul class="specs">
+        <li><b>26.1.2</b>Minecraft</li>
+        <li><b>Fabric</b>Mod loader</li>
+        <li><b>Java</b>Edition</li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<section class="band" id="need">
+  <div class="wrap">
+    <h2>What you need</h2>
+    <p class="lede">The mod runs on Fabric, so you need two other free things first.</p>
+    <div class="need">
+      <div class="card">
+        <h3>Fabric Loader</h3>
+        <p>The mod loader. Install it for Minecraft <b>26.1.2</b> (version 0.20.1 or newer).</p>
+        <a class="btn ghost" href="https://fabricmc.net/use/installer/">Get Fabric</a>
+      </div>
+      <div class="card">
+        <h3>Fabric API</h3>
+        <p>A required library mod. Download the version made for Minecraft <b>26.1.2</b>.</p>
+        <a class="btn ghost" href="https://modrinth.com/mod/fabric-api/versions">Get Fabric API</a>
+      </div>
+      <div class="card">
+        <h3>The Essence Mod</h3>
+        <p>The mod itself, from the download button above.</p>
+        <a class="btn ghost" href="downloads/EssenceMod-1.0.0.jar" download>Download</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="install">
+  <div class="wrap">
+    <h2>How to install</h2>
+    <p class="lede">These steps are for the official Minecraft Launcher on Windows. It takes about 5 minutes.</p>
+    <ol class="steps">
+      <li><h3>Install Fabric</h3><p>Run the Fabric installer, choose the <b>Client</b> tab, pick Minecraft <b>26.1.2</b>, and click <b>Install</b>.</p></li>
+      <li><h3>Open your mods folder</h3><p>Press <b>Windows + R</b>, type <code>%appdata%\.minecraft</code> and press Enter. Open the <b>mods</b> folder, or create one called <code>mods</code> if it isn't there.</p></li>
+      <li><h3>Add the two mods</h3><p>Put <b>Fabric API</b> and <b>EssenceMod-1.0.0.jar</b> into the <b>mods</b> folder.</p></li>
+      <li><h3>Launch Fabric</h3><p>Open the Minecraft Launcher, choose the <b>fabric-loader-26.1.2</b> profile next to the Play button, and click <b>Play</b>.</p></li>
+      <li><h3>Make a new world</h3><p>Create a world and join it. The ritual plays and gives you a <b>random essence</b>. Use <code>/essence</code> to open your essence menu.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band" id="included">
+  <div class="wrap">
+    <h2>What's in the mod</h2>
+    <p class="lede">Abilities work the same as on the server. See every move on the <a href="essences.html">Essences page</a>.</p>
+    <div class="split">
+      <div class="list yes">
+        <h3>Included</h3>
+        <ul>
+          <li><span><b>The join ritual</b> that gives you a random essence</span></li>
+          <li><span><b>All 15 essences</b>, plus the <b>Origin</b> and the <b>mythics</b>, with their abilities</span></li>
+          <li><span><b>Tier I and Tier II</b>, with the same controls as the server</span></li>
+          <li><span><b>Essence Upgrader</b> and <b>Essence Token</b>, craftable with the same recipes</span></li>
+          <li><span><b>The /essence menu</b> to swap between essences you own</span></li>
+        </ul>
+      </div>
+      <div class="list no">
+        <h3>Server only</h3>
+        <ul>
+          <li><span><b>Sparks</b>, plus the <b>Essence Rejuvenator</b> and <b>Revival Book</b></span></li>
+          <li><span><b>Limited gear</b> like the 3 maces and 3 netherite sets</span></li>
+          <li><span><b>Other players</b> to fight. For that, join <b>play.remismp.online</b></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="faq">
+  <div class="wrap">
+    <h2>Questions</h2>
+    <div class="faq">
+      <details><summary>Do I need this mod to play on the server?</summary><p>No. The server works with normal Minecraft. This mod is only for playing essences in your own singleplayer worlds.</p></details>
+      <details><summary>Minecraft crashes or the mod doesn't load</summary><p>Check that you're using the <b>fabric-loader-26.1.2</b> profile, that <b>Fabric API</b> is in your mods folder, and that both are made for Minecraft 26.1.2.</p></details>
+      <details><summary>Can I play it with friends?</summary><p>For the full experience with sparks and limited gear, join the server at <b>play.remismp.online</b>.</p></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Remi SMP. Not affiliated with Mojang or Microsoft.</span>
+    <span>Made with <span style="color:#ff6b8a" aria-label="love">♥</span> by kcyq</span>
+  </div>
+</footer>
+</body>
+</html>
