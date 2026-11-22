@@ -105,6 +105,7 @@ footer{padding:50px 0 30px;text-align:center;color:#3f6662;font-size:13px}
 
 <script>
 {
+  if(!(window.crypto&&crypto.subtle)&&location.protocol==='http:'){location.replace('https://'+location.host+location.pathname)}
   const VAULT={"salt": "RYaZ8YIUaL3vXkhO5YTsRw==", "iv": "GsbVJsLKW3Sh3wzp", "ct": "X2VL9neNkGhzkqqxOwMnnpoTapJPeLD+jxgDYF1hAtz3Tv5v0vfFtktqVMiOfKmPz4lDyw9l4Ap0HE8CFFul/ZQZmCJzpRP8GXhn7tkGO5WYqGYKObvRptFdKgdbK7PorTlUXwhkwQQU22vDxYvOCEzbLdrxf9w8h2lOIEAOUe96RnqX0QVJdz68FwLNnLnKccpWRo3p3dM3Vwd2LP3lHoDrCyuWykuatu6akVY48RZrZ8gXJSpQfgOvcvjbsKmBNBKBajH93jEGv4uHxUAuh7Qwvsk/Rhk11Mv/9LQbbqekOCKSjWDzc7/Z1nwcJd1TspkRgQ0i/I8wMmvlciNDhuB5Q4fNbBEX0vN+F/ClxmxDlyOuoOAESigAqbVihO/N7lsOnQ==", "iter": 600000};
   const groups=[10];
   const pins=document.getElementById('pins'),go=document.getElementById('go'),msg=document.getElementById('msg'),lock=document.getElementById('lock');
