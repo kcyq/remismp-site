@@ -48,6 +48,7 @@ nav .wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:10px m
 .hero{background:radial-gradient(120% 80% at 75% 30%,#0c4a55 0%,var(--bg) 60%);border-bottom:1px solid var(--line)}
 .hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:40px;align-items:center}
 .tag{display:inline-block;background:#45e0e022;color:var(--light);border:1px solid #45e0e066;border-radius:999px;padding:4px 14px;font-size:14px;font-weight:600;margin-bottom:18px}
+.hero h1.brand{margin:0 0 6px;line-height:0}.hero h1.brand img{width:clamp(220px,32vw,340px);height:auto;margin-left:-14px;filter:drop-shadow(0 10px 30px #45e0e033)}
 .hero h1{font-size:clamp(56px,9vw,104px);margin-bottom:16px;text-shadow:0 6px 24px #45e0e040}
 .hero p{font-size:18px;color:var(--mute);max-width:46ch;margin:0 0 26px}
 .ipbox{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
@@ -141,7 +142,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   <div class="wrap">
     <div>
       <span class="tag">Season 2 — Essence SMP</span>
-      <h1>Remi SMP</h1>
+      <h1 class="brand"><img src="remi-logo.png" alt="Remi SMP" width="512" height="512"></h1>
       <p>Claim one of 16 essences, guard your sparks and team up or fight for the server's rarest gear.</p>
       <div class="ipbox">
         <button class="ip" id="ipBtn" aria-label="Copy server address">
